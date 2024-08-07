@@ -1,14 +1,17 @@
+// popup.js
+
 document.addEventListener('DOMContentLoaded', function() {
   const loginButton = document.getElementById('loginButton');
+  const logoutButton = document.getElementById('logoutButton');
   const statusElement = document.getElementById('status');
   const itemTitleElement = document.getElementById('itemTitle');
 
-  const CLIENT_ID = process.env.CLIENT_ID;
-  const REDIRECT_URI = process.env.REDIRECT_URI;
-  const TENANT_ID = process.env.TENANT_ID;
-  const SITE_ID = process.env.SITE_ID;
-  const LIST_ID = process.env.LIST_ID;
-  const ITEM_ID = process.env.ITEM_ID;
+  const CLIENT_ID = "eeda8f82-e655-4380-8098-73dd5f7b5d92";
+  const REDIRECT_URI = "https://hhdfonbcmjjnbiihcinmhlomemnikoaa.chromiumapp.org"
+  const TENANT_ID = "725cf83f-e41a-4f1e-bcff-ae262aa928d2"
+  const SITE_ID = "509eb5ca-57e1-4361-bba5-6f39e68a20de,c7308b63-f233-47ee-bdfb-7017d254be9a"
+  const LIST_ID = "80801418-d50d-452f-adce-6464d898c137"
+  const ITEM_ID = 1
 
   // Function to decode JWT token
   function decodeJwt(token) {
@@ -65,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       statusElement.textContent = `Hello, ${user.displayName}`;
       loginButton.classList.add('hidden'); // Hide the login button
+      logoutButton.classList.remove('hidden'); // Show the logout button
 
       // Fetch SharePoint list item title
       fetchAndDisplayItemTitle(accessToken);
@@ -79,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function initiateAuthFlow() {
     const authUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${REDIRECT_URI}&scope=openid profile User.Read Sites.Read.All`;
     console.log('Starting auth flow:', authUrl);
-
+    
     chrome.identity.launchWebAuthFlow(
       {
         url: authUrl,
@@ -110,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('Access token saved in storage:', accessToken);
           statusElement.textContent = 'Logged In';
           loginButton.classList.add('hidden'); // Hide the login button
+          logoutButton.classList.remove('hidden'); // Show the logout button
 
           // Fetch user info using the access token
           fetchAndDisplayUserInfo(accessToken);
@@ -140,5 +145,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add event listener for login button
   loginButton.addEventListener('click', function() {
     initiateAuthFlow();
+  });
+
+  // Add event listener for logout button
+  logoutButton.addEventListener('click', function() {
+    chrome.storage.local.remove('accessToken', function() {
+      console.log('Access token removed from storage.');
+      statusElement.textContent = 'Logged Out';
+      loginButton.classList.remove('hidden'); // Show the login button
+      logoutButton.classList.add('hidden'); // Hide the logout button
+      itemTitleElement.classList.add('hidden'); // Hide the item title
+    });
   });
 });
