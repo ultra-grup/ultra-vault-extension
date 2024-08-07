@@ -4,7 +4,8 @@
   "version": "1.0",
   "permissions": [
     "identity",
-    "storage"
+    "storage",
+    "tabs"
   ],
   "background": {
     "service_worker": "background.js"
@@ -13,8 +14,8 @@
     "default_popup": "popup.html"
   },
   "oauth2": {
-    "client_id": "YOUR_CLIENT_ID",
-    "scopes": ["openid", "profile", "User.Read"],
-    "redirect_uri": "https://<extension-id>.chromiumapp.org/"
+    "client_id": "eeda8f82-e655-4380-8098-73dd5f7b5d92",
+    "scopes": ["openid", "profile", "User.Read", "Sites.Read.All"],
+    "redirect_uri": "https://bnpjhodgfjfipnmfkjddlncnadfmjeli.chromiumapp.org/"
   }
 }

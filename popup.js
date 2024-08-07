@@ -1,17 +1,16 @@
-// popup.js
-
 document.addEventListener('DOMContentLoaded', function() {
   const loginButton = document.getElementById('loginButton');
   const logoutButton = document.getElementById('logoutButton');
   const statusElement = document.getElementById('status');
+  const urlStatusElement = document.getElementById('urlStatus');
   const itemTitleElement = document.getElementById('itemTitle');
 
   const CLIENT_ID = "eeda8f82-e655-4380-8098-73dd5f7b5d92";
-  const REDIRECT_URI = "https://hhdfonbcmjjnbiihcinmhlomemnikoaa.chromiumapp.org"
-  const TENANT_ID = "725cf83f-e41a-4f1e-bcff-ae262aa928d2"
-  const SITE_ID = "509eb5ca-57e1-4361-bba5-6f39e68a20de,c7308b63-f233-47ee-bdfb-7017d254be9a"
-  const LIST_ID = "80801418-d50d-452f-adce-6464d898c137"
-  const ITEM_ID = 1
+  const REDIRECT_URI = "https://bnpjhodgfjfipnmfkjddlncnadfmjeli.chromiumapp.org/";
+  const TENANT_ID = "725cf83f-e41a-4f1e-bcff-ae262aa928d2";
+  let SITE_ID = "";
+  let LIST_ID = "";
+  const ITEM_ID = 1;
 
   // Function to decode JWT token
   function decodeJwt(token) {
@@ -70,8 +69,35 @@ document.addEventListener('DOMContentLoaded', function() {
       loginButton.classList.add('hidden'); // Hide the login button
       logoutButton.classList.remove('hidden'); // Show the logout button
 
-      // Fetch SharePoint list item title
-      fetchAndDisplayItemTitle(accessToken);
+      // Extract site and list IDs from URL and fetch actual IDs
+      chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        const url = tabs[0].url;
+        console.log('Current tab URL:', url);
+        if (url.includes('sharepoint.com/sites/') && url.includes('/Lists/')) {
+          const siteUrl = url.match(/sites\/([^\/]+)/)[0];
+          const listName = url.match(/Lists\/([^\/]+)/)[1];
+
+          chrome.runtime.sendMessage({
+            action: "getSiteAndListIds",
+            siteUrl: siteUrl,
+            listName: listName,
+            accessToken: accessToken
+          }, function(response) {
+            if (response.error) {
+              console.error('Error fetching site or list ID:', response.error);
+              itemTitleElement.textContent = 'Error fetching site or list ID';
+            } else {
+              SITE_ID = response.siteId;
+              LIST_ID = response.listId;
+              fetchAndDisplayItemTitle(accessToken);
+            }
+          });
+        } else {
+          console.error('The current URL is not a valid SharePoint list URL.');
+          urlStatusElement.textContent = 'The current URL is not a SharePoint list URL.';
+          urlStatusElement.classList.remove('hidden');
+        }
+      });
     })
     .catch(error => {
       console.error('Error fetching user info:', error);
@@ -81,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Function to initiate the authentication flow
   function initiateAuthFlow() {
-    const authUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${REDIRECT_URI}&scope=openid profile User.Read Sites.Read.All`;
+    const authUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid profile User.Read Sites.Read.All`;
     console.log('Starting auth flow:', authUrl);
     
     chrome.identity.launchWebAuthFlow(
