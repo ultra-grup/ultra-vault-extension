@@ -11,6 +11,12 @@
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],  
+      "js": ["content.js"]
+    }
+  ],
   "action": {
     "default_popup": "popup.html"
   },
@@ -18,11 +24,5 @@
     "client_id": "eeda8f82-e655-4380-8098-73dd5f7b5d92",
     "scopes": ["openid", "profile", "User.Read", "Sites.Read.All"],
     "redirect_uri": "https://hjnbmpndlilnmhhjkjcnaobpohfalekl.chromiumapp.org/"
-  },
-  "content_scripts": [
-    {
-      "matches": ["*://*.sharepoint.com/*"], 
-      "js": ["content.js"]
-    }
-  ]
+  }
 }
