@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const itemTitleElement = document.getElementById('itemTitle');
 
   const CLIENT_ID = "eeda8f82-e655-4380-8098-73dd5f7b5d92";
-  const REDIRECT_URI = "https://bnpjhodgfjfipnmfkjddlncnadfmjeli.chromiumapp.org/";
+  const REDIRECT_URI = "https://hmcpfdmeiliamdnijkcmojbpkhnmckol.chromiumapp.org/";
   const TENANT_ID = "725cf83f-e41a-4f1e-bcff-ae262aa928d2";
   let SITE_ID = "";
   let LIST_ID = "";

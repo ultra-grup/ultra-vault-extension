@@ -7,7 +7,7 @@ This Chrome extension interacts with Microsoft SharePoint to fetch and display S
 ### Prerequisites
 
 1. **Azure AD Application Registration**:
-   - Register an application in Azure Active Directory.
+   - We have registered the Ultra Vault application in [Azure Active Directory](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationMenuBlade/~/Authentication/appId/eeda8f82-e655-4380-8098-73dd5f7b5d92/isMSAApp~/false).
    - Note the "Application (client) ID".
    - Configure the redirect URI as `https://<extension-id>.chromiumapp.org/`.
 
