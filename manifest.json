@@ -5,7 +5,8 @@
   "permissions": [
     "identity",
     "storage",
-    "tabs"
+    "tabs",
+    "activeTab"
   ],
   "background": {
     "service_worker": "background.js"
@@ -16,6 +17,12 @@
   "oauth2": {
     "client_id": "eeda8f82-e655-4380-8098-73dd5f7b5d92",
     "scopes": ["openid", "profile", "User.Read", "Sites.Read.All"],
-    "redirect_uri": "https://bnpjhodgfjfipnmfkjddlncnadfmjeli.chromiumapp.org/"
-  }
+    "redirect_uri": "https://hjnbmpndlilnmhhjkjcnaobpohfalekl.chromiumapp.org/"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.sharepoint.com/*"], 
+      "js": ["content.js"]
+    }
+  ]
 }
