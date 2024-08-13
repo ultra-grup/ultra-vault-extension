@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const itemTitleElement = document.getElementById('itemTitle');
 
   const CLIENT_ID = "eeda8f82-e655-4380-8098-73dd5f7b5d92";
-  const REDIRECT_URI = "https://hmcpfdmeiliamdnijkcmojbpkhnmckol.chromiumapp.org/";
+  const REDIRECT_URI = "https://hhdfonbcmjjnbiihcinmhlomemnikoaa.chromiumapp.org/";
   const TENANT_ID = "725cf83f-e41a-4f1e-bcff-ae262aa928d2";
   let SITE_ID = "";
   let LIST_ID = "";
@@ -105,8 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Function to initiate the authentication flow
-  function initiateAuthFlow() {
+function initiateAuthFlow() {
     const authUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid profile User.Read Sites.Read.All`;
     console.log('Starting auth flow:', authUrl);
     
@@ -118,6 +117,15 @@ document.addEventListener('DOMContentLoaded', function() {
       function (redirect_url) {
         if (chrome.runtime.lastError) {
           console.error('Auth flow error:', chrome.runtime.lastError);
+
+          // Log specific details if possible
+          if (chrome.runtime.lastError.message) {
+            console.error('Error message:', chrome.runtime.lastError.message);
+          }
+
+          // Optionally, log the entire error object for more insights
+          console.error('Full error object:', JSON.stringify(chrome.runtime.lastError, null, 2));
+
           statusElement.textContent = 'Login failed';
           return;
         }
@@ -148,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     );
   }
+
 
   // Check if the user is already logged in
   chrome.storage.local.get('accessToken', function(data) {
