@@ -71,8 +71,29 @@ function fetchSiteId(siteUrl, accessToken) {
     });
 }
 
+function convertToInternalName(displayName) {
+    // Convert the display name to lower case
+    let internalName = displayName.toLowerCase();
+
+    // Replace spaces with '_x0020_' (this is the encoding for spaces)
+    internalName = internalName.replace(/\s/g, '_x0020_');
+
+    // Replace special characters with their respective codes
+    // Here are a few examples, you may need to add more depending on your use case
+    internalName = internalName.replace(/&/g, '_x0026_');  // & becomes _x0026_
+    internalName = internalName.replace(/\//g, '_x002f_'); // / becomes _x002f_
+    internalName = internalName.replace(/:/g, '_x003a_');  // : becomes _x003a_'
+    internalName = internalName.replace(/-/g, '_x002d_');  // - becomes _x002d_'
+
+    // Any other transformations required can be added here.
+
+    return internalName;
+}
+
+
 // Function to fetch all lists from the site and match by display name
 function fetchListId(siteId, listName, accessToken) {
+  let internalListNAme = convertToInternalName(listName);
   const listsEndpoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listName}`;
   return fetch(listsEndpoint, {
     headers: {
