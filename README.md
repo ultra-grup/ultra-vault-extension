@@ -19,5 +19,5 @@ This Chrome extension interacts with Microsoft SharePoint to fetch and display S
 Update manifest.json with YOUR_CLIENT_ID with your Azure AD application client ID.
 Replace <extension-id> with your Chrome extension ID.
 
-Update popup.js
+Update background.js
 Update the constants CLIENT_ID, REDIRECT_URI, and TENANT_ID with your actual values

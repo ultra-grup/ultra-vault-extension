@@ -2,7 +2,7 @@
 
 const CLIENT_ID = "eeda8f82-e655-4380-8098-73dd5f7b5d92";
 const REDIRECT_URI =
-  "https://hhdfonbcmjjnbiihcinmhlomemnikoaa.chromiumapp.org/";
+  "https://hmcpfdmeiliamdnijkcmojbpkhnmckol.chromiumapp.org/";
 const TENANT_ID = "725cf83f-e41a-4f1e-bcff-ae262aa928d2";
 
 // Utility function to decode JWT token
@@ -73,7 +73,7 @@ function fetchSiteId(siteUrl, accessToken) {
 
 // Function to fetch all lists from the site and match by display name
 function fetchListId(siteId, listName, accessToken) {
-  const listsEndpoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists`;
+  const listsEndpoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listName}`;
   return fetch(listsEndpoint, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -88,11 +88,10 @@ function fetchListId(siteId, listName, accessToken) {
       return response.json();
     })
     .then((listsData) => {
-      const list = listsData.value.find(
-        (l) => l.displayName.toLowerCase() === listName.toLowerCase()
-      );
-      if (!list) throw new Error("The specified list was not found");
-      return list.id;
+
+      console.log('Lit Data', listsData)
+      if (!listsData) throw new Error("The specified list was not found");
+      return listsData.id;
     });
 }
 
@@ -123,6 +122,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       fetchSiteId(siteUrl, accessToken)
         .then((fetchedSiteId) => {
           siteId = fetchedSiteId;
+          console.log(siteId)
           return fetchListId(siteId, listName, accessToken);
         })
         .then((listId) => {
